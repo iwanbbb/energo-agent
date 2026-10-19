@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Энерго-Агент: Спаси город!</title>
+  <meta name="description" content="Компьютерная дидактическая игра об энергосбережении для учащихся 5–9 классов">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-deco" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <main id="app">
+
+    <!-- ================= СТАРТОВЫЙ ЭКРАН ================= -->
+    <section class="screen active" id="screen-start" aria-label="Главный экран">
+      <div class="start-wrap">
+        <div class="start-text">
+          <div class="logo-bolt" aria-hidden="true">⚡</div>
+          <h1 class="title">ЭНЕРГО-АГЕНТ<span>СПАСИ ГОРОД!</span></h1>
+          <p class="subtitle">«Стань героем энергосбережения»</p>
+          <p class="lead">
+            Энергограду нужна твоя помощь! Жители города расходуют слишком много электроэнергии.
+            Пройди все испытания, принимай правильные решения и помоги сохранить энергию города.
+          </p>
+
+          <label class="name-field">
+            <span>Имя агента</span>
+            <input id="player-name" type="text" maxlength="24" placeholder="Введи своё имя" autocomplete="off">
+          </label>
+
+          <button class="btn btn-primary btn-big" id="btn-start">▶ НАЧАТЬ МИССИЮ</button>
+          <div class="btn-row">
+            <button class="btn btn-ghost" id="btn-how">❓ КАК ИГРАТЬ</button>
+            <button class="btn btn-ghost" id="btn-about">ℹ ОБ ИГРЕ</button>
+          </div>
+        </div>
+
+        <div class="start-art">
+          <div class="city-card">
+            <div class="city-label">🏙️ Энергоград</div>
+            <div id="start-city"></div>
+            <div class="start-agent" id="start-agent" aria-hidden="true"></div>
+          </div>
+          <div class="watt-say start-watt">
+            <div class="watt-mini" id="start-watt" aria-hidden="true"></div>
+            <div class="bubble"><b>Ватт:</b> Привет! Я робот-помощник Ватт. Вместе мы спасём Энергоград!</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ИГРОВОЙ ЭКРАН ================= -->
+    <section class="screen" id="screen-game" aria-label="Игра">
+      <header class="hud">
+        <div class="hud-item">
+          <span class="hud-label">Уровень</span>
+          <b id="hud-level">1 / 5</b>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">⭐ Баллы</span>
+          <b id="hud-score">0</b>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Жизни</span>
+          <b id="hud-lives" class="lives">❤️❤️❤️</b>
+        </div>
+        <div class="hud-item hud-energy">
+          <span class="hud-label">⚡ Энергия города</span>
+          <div class="energy-row">
+            <div class="energy-bar"><div id="energy-fill"></div></div>
+            <b id="hud-energy">100%</b>
+          </div>
+        </div>
+        <div class="hud-actions">
+          <button class="icon-btn" id="btn-sound" title="Звук">🔊</button>
+          <button class="icon-btn" id="btn-menu" title="В главное меню">🏠</button>
+        </div>
+        <div class="progress">
+          <span class="progress-label">Прогресс миссии</span>
+          <div class="progress-track"><div id="progress-fill"></div></div>
+          <span id="progress-text">0%</span>
+        </div>
+      </header>
+
+      <div id="stage" class="stage"></div>
+    </section>
+
+    <!-- ================= ФИНАЛ / ПОРАЖЕНИЕ ================= -->
+    <section class="screen" id="screen-final" aria-label="Итоги">
+      <div id="final-content"></div>
+    </section>
+  </main>
+
+  <!-- ================= МОДАЛЬНОЕ: КАК ИГРАТЬ ================= -->
+  <div class="modal" id="modal-how" role="dialog" aria-modal="true" aria-labelledby="how-title">
+    <div class="modal-box">
+      <button class="modal-x" data-close aria-label="Закрыть">✕</button>
+      <h2 id="how-title">❓ Как играть</h2>
+      <div class="modal-body">
+        <p><b>Ты — Энерго-Агент.</b></p>
+        <p>Твоя задача — помочь Энергограду сократить лишний расход электроэнергии.</p>
+        <p>На каждом уровне тебя ждут реальные бытовые ситуации. Выбирай правильные решения.</p>
+        <p>За правильные ответы ты получаешь баллы и сохраняешь энергию города. За неправильные ответы теряешь жизнь.</p>
+        <p>Тебя ждут <b>5 уровней</b>. Пройди все уровни и получи звание <b>Главного Энерго-Агента!</b></p>
+        <div class="legend">
+          <div class="legend-item"><span>⭐</span><div><b>Баллы</b><small>+10 за каждый верный ответ</small></div></div>
+          <div class="legend-item"><span>❤️</span><div><b>Жизни</b><small>3 жизни, ошибка отнимает одну</small></div></div>
+          <div class="legend-item"><span>⚡</span><div><b>Энергия города</b><small>Жители тратят энергию — твои решения её возвращают</small></div></div>
+          <div class="legend-item"><span>💡</span><div><b>Подсказка Ватта</b><small>Одна на уровень, стоит 5 баллов</small></div></div>
+          <div class="legend-item"><span>🎮</span><div><b>Мини-игры</b><small>В конце каждого уровня — игра на внимание и скорость</small></div></div>
+        </div>
+        <p>Мини-игры: «Энерго-сортировка», «Свет в Энергошколе», «Чайный мастер», «Ночной дозор», «Охота на энерговоров» и «Энерго-пары». В них ошибки отнимают энергию города, а в «Охоте» — ещё и жизнь.</p>
+        <p class="muted">Можно отвечать клавишами <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd>, переходить дальше — <kbd>Enter</kbd>.</p>
+      </div>
+      <button class="btn btn-primary" data-close>ПОНЯТНО</button>
+    </div>
+  </div>
+
+  <!-- ================= МОДАЛЬНОЕ: ОБ ИГРЕ ================= -->
+  <div class="modal" id="modal-about" role="dialog" aria-modal="true" aria-labelledby="about-title">
+    <div class="modal-box">
+      <button class="modal-x" data-close aria-label="Закрыть">✕</button>
+      <h2 id="about-title">ℹ Об игре</h2>
+      <div class="modal-body">
+        <dl class="about-list">
+          <dt>Название</dt><dd>«Энерго-Агент: Спаси город!»</dd>
+          <dt>Тип</dt><dd>Компьютерная дидактическая игра</dd>
+          <dt>Тема</dt><dd>Энергосбережение</dd>
+          <dt>Целевая аудитория</dt><dd>Учащиеся 5–9 классов</dd>
+          <dt>Цель</dt><dd>Формирование знаний и практических навыков рационального использования электроэнергии через игровой формат.</dd>
+          <dt>Технология</dt><dd>HTML5, CSS3, JavaScript</dd>
+          <dt>Авторы</dt><dd>Тарасов Максим, Бабуревич Иван, Могилевец Варвара, Какора Алиса, Зуёнок Виктория, Воробей Анна</dd>
+        </dl>
+        <p>Игра разработана как образовательный игровой проект. Игрок знакомится с правилами энергосбережения и применяет их в различных жизненных ситуациях.</p>
+      </div>
+      <button class="btn btn-primary" data-close>ЗАКРЫТЬ</button>
+    </div>
+  </div>
+
+  <!-- ================= МОДАЛЬНОЕ: ВЫХОД ================= -->
+  <div class="modal" id="modal-exit" role="dialog" aria-modal="true" aria-labelledby="exit-title">
+    <div class="modal-box modal-small">
+      <h2 id="exit-title">🏠 Выйти в главное меню?</h2>
+      <div class="modal-body"><p>Текущий прогресс миссии будет потерян.</p></div>
+      <div class="btn-row">
+        <button class="btn btn-danger" id="btn-exit-yes">Выйти</button>
+        <button class="btn btn-ghost" data-close>Продолжить игру</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="fx-layer" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
